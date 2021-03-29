@@ -112,6 +112,9 @@ void BasicOscillatorAudioProcessor::prepareToPlay (double sampleRate, int sample
     osc.prepare(spec);
     gain.prepare(spec);
     
+//  set the frequency and gain of the oscillator here using their object parameters. The osc
+//  and gain are initialised in the header file
+    
     osc.setFrequency(220.0f);
     gain.setGainLinear(0.01f);
 }
@@ -172,7 +175,6 @@ void BasicOscillatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
     juce::dsp::AudioBlock<float> audioBlock { buffer };
     osc.process((juce::dsp::ProcessContextReplacing<float>) (audioBlock));
-    
     gain.process((juce::dsp::ProcessContextReplacing<float>) (audioBlock));
     
     

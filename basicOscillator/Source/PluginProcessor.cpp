@@ -91,10 +91,29 @@ void BasicOscillatorAudioProcessor::changeProgramName (int index, const juce::St
 }
 
 //==============================================================================
+
+// Any DSP algorithm will have a prepare method which has the sample size, buffer size and number of
+// channels we are trying to process
+
 void BasicOscillatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
+//  declare spec as an object under the dsp::ProcessSpec namespace which defines
+//  max samples per block, sample rate for processing and the number of output channels
+// the prepare method is then invoked on the spec in relation to the oscillator
+    
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    osc.prepare(spec);
+    gain.prepare(spec);
+    
+    osc.setFrequency(220.0f);
+    gain.setGainLinear(0.01f);
 }
 
 void BasicOscillatorAudioProcessor::releaseResources()
@@ -150,12 +169,15 @@ void BasicOscillatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
 
-        // ..do something to the data...
-    }
+    juce::dsp::AudioBlock<float> audioBlock { buffer };
+    osc.process((juce::dsp::ProcessContextReplacing<float>) (audioBlock));
+    
+    gain.process((juce::dsp::ProcessContextReplacing<float>) (audioBlock));
+    
+    
+    
+    
 }
 
 //==============================================================================

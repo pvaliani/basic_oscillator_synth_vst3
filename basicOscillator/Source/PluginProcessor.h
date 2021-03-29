@@ -57,7 +57,13 @@ private:
     //    declare an oscillator in the dsp namespace
 //    declare a gain controller with a gain value to adjust the overall signal volume
     
-    juce::dsp::Oscillator<float> osc { [](float x) {return std::sin(x);}};
+//    standard sin wave equation
+    
+//    juce::dsp::Oscillator<float> osc { [](float x) {return std::sin(x);}};
+    
+// saw wave equation
+    juce::dsp::Oscillator<float> osc { [](float x) {return x / juce::MathConstants<float>::pi;}};
+    
     juce::dsp::Gain<float> gain;
     //==============================================================================
 

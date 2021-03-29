@@ -58,11 +58,14 @@ private:
 //    declare a gain controller with a gain value to adjust the overall signal volume
     
 //    standard sin wave equation
-    
 //    juce::dsp::Oscillator<float> osc { [](float x) {return std::sin(x);}};
     
-// saw wave equation
-    juce::dsp::Oscillator<float> osc { [](float x) {return x / juce::MathConstants<float>::pi;}};
+//    saw wave equation
+//    juce::dsp::Oscillator<float> osc { [](float x) {return x / juce::MathConstants<float>::pi;}};
+    
+//    square wave equation
+    
+    juce::dsp::Oscillator<float> osc { [](float x) {return x < 0.0f ? -1.0f : 1.0f;}};
     
     juce::dsp::Gain<float> gain;
     //==============================================================================
